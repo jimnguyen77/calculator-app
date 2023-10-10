@@ -4,6 +4,12 @@ This is a replica application of the Apple iPhone calculator app written purely 
 
 It satisfies the basic operations of add, subtract, multiply, and divide.
 
+To use this code, within the root of it, type:
+```
+yarn && yarn dev
+```
+This should open up a temporary web dev server located at: http://localhost:5173
+
 ## Initial planning and thought process:
 - Create scaffolding
 	- Create initial grid
@@ -21,12 +27,6 @@ It satisfies the basic operations of add, subtract, multiply, and divide.
 	- “Sticky” operand styling
 	- Limit display to 9 digits, while shrinking font size
 	- Add keyboard support (including backspace)
-
-To use this code, within the root of it, type:
-```
-yarn && yarn dev
-```
-This should open up a temporary web dev server located at: http://localhost:5173
 
 ## TODOs (in no particular order):
 - make "0" left justified, instead of centered (nit)
