@@ -1,3 +1,5 @@
+import { DEFAULT_DISPLAY_FONT_SIZE } from '../common/styles.constants';
+
 const MAX_RANGE = 999999999;
 const MIN_RANGE = -999999999;
 
@@ -26,15 +28,12 @@ export function unformatNumber(formattedNumber: string): string {
 
 export function getAdjustedFontSize(input: string): string {
   const formattedLength = unformatNumber(input).length;
-  let ADJUSTED_FONTSIZE = '4.25rem';
+  const FONT_SIZE_DECREMENT = 0.45;
+  const decrementsNeeded = Math.max(formattedLength - 7, 0);
 
-  if (formattedLength >= 8) {
-    ADJUSTED_FONTSIZE = '3.8rem';
-  }
-
-  if (formattedLength >= 9) {
-    ADJUSTED_FONTSIZE = '3.4rem';
-  }
+  const ADJUSTED_FONTSIZE = `${
+    DEFAULT_DISPLAY_FONT_SIZE - FONT_SIZE_DECREMENT * decrementsNeeded
+  }rem`;
 
   return ADJUSTED_FONTSIZE;
 }

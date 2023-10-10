@@ -8,6 +8,8 @@ export enum ButtonColors {
   TOP_COLOR = 'black',
 }
 
+export const DEFAULT_DISPLAY_FONT_SIZE = 4.25;
+
 export const BaseStyle = {
   alignItems: 'center',
   display: 'flex',
@@ -30,7 +32,7 @@ export const InputStyle = {
   alignItems: 'center',
   color: ButtonColors.DEFAULT,
   display: 'flex',
-  fontSize: '4.25rem',
+  fontSize: `${DEFAULT_DISPLAY_FONT_SIZE}rem`,
   fontWeight: '300',
   height: '80px',
   justifyContent: 'flex-end',
