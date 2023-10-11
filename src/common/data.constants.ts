@@ -1,3 +1,10 @@
+// formatting number limits
+export const EXPONENT_LIMIT = 160;
+export const MAX_EXPONENT_VALUE = Math.pow(10, EXPONENT_LIMIT);
+export const MIN_EXPONENT_VALUE = -Math.pow(10, EXPONENT_LIMIT);
+export const WHOLE_NUMBER_LIMIT = 999999999;
+
+// buttons
 export const TOP_BUTTONS = ['AC', '+/-', '%'];
 export const OPER_BUTTONS = ['÷', '×', '-', '+', '='];
 

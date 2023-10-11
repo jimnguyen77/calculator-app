@@ -1,7 +1,9 @@
+import {
+  MAX_EXPONENT_VALUE,
+  MIN_EXPONENT_VALUE,
+  WHOLE_NUMBER_LIMIT,
+} from '../common/data.constants';
 import { DEFAULT_DISPLAY_FONT_SIZE } from '../common/styles.constants';
-
-const MAX_RANGE = 999999999;
-const MIN_RANGE = -999999999;
 
 export function getActualLength(numberString: string): number {
   return numberString.replace(/[,.]/g, '').length; // Excludes commas and the decimal point
@@ -9,17 +11,17 @@ export function getActualLength(numberString: string): number {
 
 export function formatNumber(number: string | number): string {
   let numValue = parseFloat(number.toString());
-  numValue = Math.min(Math.max(numValue, MIN_RANGE), MAX_RANGE);
 
-  let formattedNum = numValue.toLocaleString(undefined, { maximumFractionDigits: 8 });
-  const parts = formattedNum.split('.');
+  if (Math.abs(numValue) > WHOLE_NUMBER_LIMIT) {
+    if (numValue > MAX_EXPONENT_VALUE) numValue = MAX_EXPONENT_VALUE;
+    if (numValue < MIN_EXPONENT_VALUE) numValue = MIN_EXPONENT_VALUE;
 
-  while (getActualLength(formattedNum) > 9) {
-    formattedNum = Number(formattedNum).toFixed(parts[1].length - 1);
-    parts[1] = parts[1].substring(0, parts[1].length - 1);
+    const exponent = Math.floor(Math.log10(Math.abs(numValue)));
+    const base = Math.round(numValue / Math.pow(10, exponent));
+    return `${base < 0 ? '-' : ''}${Math.abs(base)}e${exponent}`;
   }
 
-  return formattedNum;
+  return numValue.toLocaleString(undefined, { maximumFractionDigits: 8 });
 }
 
 export function unformatNumber(formattedNumber: string): string {
