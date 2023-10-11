@@ -25,7 +25,7 @@ export const MainStyle = {
 export const BoxStyle = {
   ...BaseStyle,
   minHeight: '100vh',
-  width: '304px',
+  width: '280px',
 };
 
 export const InputStyle = {
@@ -36,6 +36,7 @@ export const InputStyle = {
   fontWeight: '300',
   height: '80px',
   justifyContent: 'flex-end',
+  letterSpacing: '-0.1rem',
   mb: 1,
 };
 

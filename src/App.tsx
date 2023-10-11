@@ -184,7 +184,7 @@ export default function App() {
           </Grid>
           {BUTTONS.map((row, rowIndex) => (
             <Grid xs={12} key={rowIndex}>
-              <Grid container justifyContent='center' spacing={2}>
+              <Grid container justifyContent='center' spacing={1}>
                 {row.map((button, buttonIndex) => {
                   const { buttonLabel, buttonSx } = getButtonAttributes(
                     activeOperation,
