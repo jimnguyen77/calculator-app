@@ -123,6 +123,11 @@ export default function App() {
         setInput(slicedInput ? formatNumber(slicedInput) : '0');
       }
 
+      if (event.altKey && (event.code === 'KeyC' || event.code === 'Escape')) {
+        handleButtonClick('AC');
+        return;
+      }      
+
       if (event.altKey && event.code === 'Minus') {
         handleButtonClick('+/-');
         return;
