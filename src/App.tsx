@@ -123,11 +123,6 @@ export default function App() {
         setInput(slicedInput ? formatNumber(slicedInput) : '0');
       }
 
-      if (event.altKey && (event.code === 'KeyC' || event.code === 'Escape')) {
-        handleButtonClick('AC');
-        return;
-      }      
-
       if (event.altKey && event.code === 'Minus') {
         handleButtonClick('+/-');
         return;
@@ -156,7 +151,7 @@ export default function App() {
         case 'c':
         case 'C':
         case 'Escape':
-          handleButtonClick('C');
+          handleButtonClick(clearButtonLabel);
           break;
         case '%':
           handleButtonClick('%');
@@ -165,7 +160,7 @@ export default function App() {
           break;
       }
     },
-    [handleButtonClick, input],
+    [clearButtonLabel, handleButtonClick, input],
   );
 
   useEffect(() => {
