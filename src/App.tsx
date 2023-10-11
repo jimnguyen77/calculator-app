@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,79 +21,153 @@ export default function App() {
   const [clearButtonLabel, setClearButtonLabel] = useState('AC');
   const [input, setInput] = useState('0');
   const [memory, setMemory] = useState<string | null>(null);
+  const [lastOperand, setLastOperand] = useState<string | null>(null);
   const [operation, setOperation] = useState<string | null>(null);
   const [shouldResetInput, setShouldResetInput] = useState(false);
 
   const ADJUSTED_FONTSIZE = getAdjustedFontSize(input);
 
-  const handleButtonClick = (value: string) => {
-    if (value === '=') {
-      if (memory && operation) {
-        try {
-          const result = eval(`${unformatNumber(memory)} ${operation} ${unformatNumber(input)}`);
-          setShouldResetInput(true);
-          setInput(formatNumber(result));
-          setMemory(null);
-          setOperation(null);
-        } catch {
-          setInput('Error');
-          setMemory(null);
-          setOperation(null);
+  const handleButtonClick = useCallback(
+    (value: string) => {
+      if (value === '=') {
+        if (memory && operation) {
+          const handleError = () => {
+            setInput('Error');
+            setMemory(null);
+            setOperation(null);
+          };
+
+          try {
+            const operand = lastOperand && shouldResetInput ? lastOperand : unformatNumber(input);
+            const result = eval(`${unformatNumber(memory)} ${operation} ${operand}`);
+
+            if (result === Infinity || result === -Infinity || isNaN(result)) {
+              handleError();
+            } else {
+              setShouldResetInput(true);
+              setInput(formatNumber(result));
+              setMemory(formatNumber(result));
+            }
+          } catch {
+            handleError();
+          }
         }
-      }
-    } else if (OPER_BUTTONS.includes(value)) {
-      setMemory(input);
+      } else if (OPER_BUTTONS.includes(value)) {
+        setMemory(input);
+        setLastOperand(input);
 
-      if (value === '×') {
-        setOperation('*');
-      } else if (value === '÷') {
-        setOperation('/');
-      } else {
-        setOperation(value);
-      }
+        if (value === '×') {
+          setOperation('*');
+        } else if (value === '÷') {
+          setOperation('/');
+        } else {
+          setOperation(value);
+        }
 
-      setActiveOperation(value);
-      setShouldResetInput(true);
-    } else if (value === 'AC' || value === 'C') {
-      if (value === 'AC') {
-        setOperation(null);
-        setActiveOperation(null);
-      }
+        setActiveOperation(value);
+        setShouldResetInput(true);
+      } else if (value === 'AC' || value === 'C') {
+        if (value === 'AC') {
+          setOperation(null);
+          setActiveOperation(null);
+        }
 
-      setInput('0');
-      setMemory(null);
-      setClearButtonLabel('AC');
-    } else if (value === '+/-') {
-      setInput((prev) => formatNumber(Number(unformatNumber(prev)) * -1));
-    } else if (value === '%') {
-      setInput((prev) => formatNumber(Number(unformatNumber(prev)) / 100));
-    } else if (!isNaN(Number(value)) || value === '.') {
-      setClearButtonLabel('C');
-      setActiveOperation(null);
-
-      if (input === 'Error' || shouldResetInput) {
-        setInput(value === '.' ? '0.' : value);
+        setInput('0');
+        setMemory(null);
+        setLastOperand(null);
+        setClearButtonLabel('AC');
+      } else if (value === '+/-') {
         if (shouldResetInput) {
-          setShouldResetInput(false);
+          setInput('0');
+        } else {
+          setInput((prev) => formatNumber(Number(unformatNumber(prev)) * -1));
         }
+      } else if (value === '%') {
+        setInput((prev) => formatNumber(Number(unformatNumber(prev)) / 100));
+      } else if (!isNaN(Number(value)) || value === '.') {
+        setClearButtonLabel('C');
+        setActiveOperation(null);
+
+        if (input === 'Error' || shouldResetInput) {
+          setInput(value === '.' ? '0.' : value);
+          if (shouldResetInput) {
+            setShouldResetInput(false);
+          }
+          return;
+        }
+
+        if (value === '.' && !input.includes('.')) {
+          setInput((prev) => prev + '.');
+        } else {
+          const currentNum = unformatNumber(input);
+          // add +1 if the next character is not "."
+          // to account for the character that will be appended
+          if (getActualLength(currentNum) + (value !== '.' ? 1 : 0) <= 9) {
+            setInput((prev) => {
+              const newValue = prev === '0' && value !== '.' ? value : unformatNumber(prev) + value;
+              return formatNumber(newValue);
+            });
+          }
+        }
+      }
+    },
+    [input, lastOperand, memory, operation, shouldResetInput],
+  );
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      const key = event.key;
+
+      if (key === 'Backspace') {
+        const slicedInput = unformatNumber(input).slice(0, -1);
+        setInput(slicedInput ? formatNumber(slicedInput) : '0');
+      }
+
+      if (event.altKey && event.code === 'Minus') {
+        handleButtonClick('+/-');
         return;
       }
 
-      if (value === '.' && !input.includes('.')) {
-        setInput((prev) => prev + '.');
-      } else {
-        const currentNum = unformatNumber(input);
-        // add +1 if the next character is not "."
-        // to account for the character that will be appended
-        if (getActualLength(currentNum) + (value !== '.' ? 1 : 0) <= 9) {
-          setInput((prev) => {
-            const newValue = prev === '0' && value !== '.' ? value : unformatNumber(prev) + value;
-            return formatNumber(newValue);
-          });
-        }
+      if (!isNaN(Number(key)) || key === '.') {
+        handleButtonClick(key);
+        return;
       }
-    }
-  };
+
+      switch (key) {
+        case '+':
+        case '-':
+          handleButtonClick(key);
+          break;
+        case '*':
+          handleButtonClick('×');
+          break;
+        case '/':
+          handleButtonClick('÷');
+          break;
+        case '=':
+        case 'Enter':
+          handleButtonClick('=');
+          break;
+        case 'c':
+        case 'C':
+        case 'Escape':
+          handleButtonClick('C');
+          break;
+        case '%':
+          handleButtonClick('%');
+          break;
+        default:
+          break;
+      }
+    },
+    [handleButtonClick, input],
+  );
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    // Clean up the event listener when the component unmounts
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
     <Container component='main' maxWidth='xs' sx={MainStyle}>

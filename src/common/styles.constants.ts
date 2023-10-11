@@ -77,4 +77,6 @@ export const TopButtonStyle = {
 export const ZeroButtonStyle = {
   ...ButtonStyle,
   borderRadius: '50px',
+  justifyContent: 'flex-start',
+  paddingLeft: '25px',
 };
