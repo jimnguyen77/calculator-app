@@ -1,4 +1,4 @@
-export function calculate(a: number, b: number, operation: string): number {
+export function calculate(a: number, b: number, operation: string): number | null {
   switch (operation) {
     case '+':
       return a + b;
@@ -8,10 +8,12 @@ export function calculate(a: number, b: number, operation: string): number {
       return a * b;
     case '/':
       if (b === 0) {
-        throw new Error('Division by zero.');
+        // Division of zero
+        return null;
       }
       return a / b;
     default:
-      throw new Error('Unknown operation.');
+      // Unknown operation
+      return null;
   }
 }
