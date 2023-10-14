@@ -10,8 +10,8 @@ import { getButtonAttributes } from './common/button';
 import { BUTTONS } from './common/data.constants';
 import { BoxStyle, InputStyle, MainStyle } from './common/styles.constants';
 import { getAdjustedFontSize } from './utils/formatting';
-import { useCalculatorHelpers } from './utils/useCalculatorHelpers';
-import { useKeyboardHelpers } from './utils/useKeyboardHelpers';
+import { useMouseClickHelpers } from './utils/use-mouse-click.helper';
+import { useKeyboardHelpers } from './utils/use-keyboard.helper';
 
 export default function App() {
   const [input, setInput] = useState<string>('0');
@@ -20,7 +20,7 @@ export default function App() {
 
   const ADJUSTED_FONTSIZE = getAdjustedFontSize(input);
 
-  const calculatorHelpers = useCalculatorHelpers({
+  const mouseClickHelpers = useMouseClickHelpers({
     input,
     setInput,
     setActiveOperation,
@@ -31,7 +31,7 @@ export default function App() {
     input,
     setInput,
     clearButtonLabel,
-    handleButtonClick: calculatorHelpers.handleButtonClick,
+    handleButtonClick: mouseClickHelpers.handleButtonClick,
   });
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function App() {
                       <Button
                         variant='contained'
                         sx={buttonSx}
-                        onClick={() => calculatorHelpers.handleButtonClick(buttonLabel)}
+                        onClick={() => mouseClickHelpers.handleButtonClick(buttonLabel)}
                         fullWidth
                       >
                         {buttonLabel}
