@@ -10,7 +10,7 @@ export const useClearButton = ({
   setInput,
   setActiveOperation,
   setClearButtonLabel,
-  setLastOperand,
+  setLastDisplay,
   setMemory,
   setOperation,
 }: ClearButtonProps) => {
@@ -23,10 +23,10 @@ export const useClearButton = ({
 
       setInput('0');
       setMemory(null);
-      setLastOperand(null);
+      setLastDisplay(null);
       setClearButtonLabel('AC');
     },
-    [setInput, setMemory, setLastOperand, setOperation, setActiveOperation, setClearButtonLabel],
+    [setInput, setMemory, setLastDisplay, setOperation, setActiveOperation, setClearButtonLabel],
   );
 
   return {

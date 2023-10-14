@@ -21,7 +21,7 @@ export const useMouseClickHelpers = ({
   setClearButtonLabel,
 }: MouseClickHelpersProps) => {
   const [memory, setMemory] = useState<string | null>(null);
-  const [lastOperand, setLastOperand] = useState<string | null>(null);
+  const [lastDisplay, setLastDisplay] = useState<string | null>(null);
   const [operation, setOperation] = useState<string | null>(null);
   const [shouldResetInput, setShouldResetInput] = useState(false);
 
@@ -30,9 +30,9 @@ export const useMouseClickHelpers = ({
     memory,
     operation,
     shouldResetInput,
-    lastOperand,
+    lastDisplay,
     setInput,
-    setLastOperand,
+    setLastDisplay,
     setMemory,
     setOperation,
     setShouldResetInput,

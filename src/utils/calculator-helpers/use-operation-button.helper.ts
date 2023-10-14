@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { BaseButtonProps } from './base-button.type';
+import { calculate } from '../calculate';
 import { formatNumber, unformatNumber } from '../formatting';
 
 type OperationButtonProps = BaseButtonProps & {
@@ -20,8 +21,8 @@ export const useOperationButton = ({
   const handleOperationButtonClick = useCallback(
     (value: string) => {
       if (memory && operation && !shouldResetInput) {
-        const operand = unformatNumber(input);
-        const result = eval(`${unformatNumber(memory)} ${operation} ${operand}`);
+        const currDisplay = parseFloat(unformatNumber(input));
+        const result = calculate(parseFloat(unformatNumber(memory)), currDisplay, operation);
         setInput(formatNumber(result));
         setMemory(formatNumber(result));
       } else if (!memory) {

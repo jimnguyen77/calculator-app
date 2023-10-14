@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { BaseButtonProps } from './base-button.type';
+import { calculate } from '../calculate';
 import { formatNumber, unformatNumber } from '../formatting';
 
 export const useEqualButton = ({
@@ -7,18 +8,21 @@ export const useEqualButton = ({
   memory,
   operation,
   shouldResetInput,
-  lastOperand,
+  lastDisplay,
   setInput,
-  setLastOperand,
+  setLastDisplay,
   setMemory,
   setOperation,
   setShouldResetInput,
 }: BaseButtonProps) => {
   const handleEqualButtonClick = useCallback(() => {
     if (memory && operation) {
-      const operand = shouldResetInput && lastOperand ? lastOperand : unformatNumber(input);
+      const currDisplay =
+        shouldResetInput && lastDisplay
+          ? parseFloat(lastDisplay)
+          : parseFloat(unformatNumber(input));
 
-      const result = eval(`${unformatNumber(memory)} ${operation} ${operand}`);
+      const result = calculate(parseFloat(unformatNumber(memory)), currDisplay, operation);
 
       if (result === Infinity || result === -Infinity || isNaN(result)) {
         setInput('Error');
@@ -27,7 +31,7 @@ export const useEqualButton = ({
       } else {
         setInput(formatNumber(result));
         setMemory(formatNumber(result));
-        setLastOperand(operand);
+        setLastDisplay(`${currDisplay}`);
         setShouldResetInput(true);
       }
     }
@@ -36,9 +40,9 @@ export const useEqualButton = ({
     memory,
     operation,
     shouldResetInput,
-    lastOperand,
+    lastDisplay,
     setInput,
-    setLastOperand,
+    setLastDisplay,
     setMemory,
     setOperation,
     setShouldResetInput,
