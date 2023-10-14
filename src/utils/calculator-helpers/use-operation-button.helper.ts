@@ -28,7 +28,6 @@ export const useOperationButton = ({
         setMemory(input);
       }
 
-      // Convert visual operator to JavaScript operator
       if (value === '×') {
         setOperation('*');
       } else if (value === '÷') {

@@ -11,6 +11,7 @@ export const useEqualButton = ({
   setInput,
   setLastOperand,
   setMemory,
+  setOperation,
   setShouldResetInput,
 }: BaseButtonProps) => {
   const handleEqualButtonClick = useCallback(() => {
@@ -19,12 +20,16 @@ export const useEqualButton = ({
 
       const result = eval(`${unformatNumber(memory)} ${operation} ${operand}`);
 
-      // Handle Error...
-
-      setInput(formatNumber(result));
-      setMemory(formatNumber(result));
-      setLastOperand(operand); // Store operand for repeated "=" presses
-      setShouldResetInput(true);
+      if (result === Infinity || result === -Infinity || isNaN(result)) {
+        setInput('Error');
+        setMemory(null);
+        setOperation(null);
+      } else {
+        setInput(formatNumber(result));
+        setMemory(formatNumber(result));
+        setLastOperand(operand);
+        setShouldResetInput(true);
+      }
     }
   }, [
     input,
@@ -35,6 +40,7 @@ export const useEqualButton = ({
     setInput,
     setLastOperand,
     setMemory,
+    setOperation,
     setShouldResetInput,
   ]);
 
