@@ -9,8 +9,8 @@ export function getActualLength(numberString: string): number {
   return numberString.replace(/[,.]/g, '').length; // Excludes commas and the decimal point
 }
 
-export function formatNumber(number: string | number): string {
-  let numValue = parseFloat(number.toString());
+export function formatNumber(number: string | number | null): string {
+  let numValue = number ? parseFloat(number.toString()) : 0;
 
   if (Math.abs(numValue) > WHOLE_NUMBER_LIMIT) {
     if (numValue > MAX_EXPONENT_VALUE) numValue = MAX_EXPONENT_VALUE;

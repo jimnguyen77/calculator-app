@@ -24,7 +24,7 @@ export const useEqualButton = ({
 
       const result = calculate(parseFloat(unformatNumber(memory)), currDisplay, operation);
 
-      if (result === Infinity || result === -Infinity || isNaN(result) || result === null) {
+      if (!result || result === Infinity || result === -Infinity || isNaN(result)) {
         setInput('Error');
         setMemory(null);
         setOperation(null);
