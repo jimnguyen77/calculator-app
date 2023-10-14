@@ -8,12 +8,10 @@ type OperationButtonProps = BaseButtonProps & {
 
 export const useOperationButton = ({
   input,
-  lastOperand,
   memory,
   operation,
   setInput,
   setActiveOperation,
-  setLastOperand,
   setMemory,
   setOperation,
   setShouldResetInput,
@@ -21,20 +19,16 @@ export const useOperationButton = ({
 }: OperationButtonProps) => {
   const handleOperationButtonClick = useCallback(
     (value: string) => {
-      if (memory && operation) {
-        // Perform the previous operation
-        const operand = lastOperand && shouldResetInput ? lastOperand : unformatNumber(input);
+      if (memory && operation && !shouldResetInput) {
+        const operand = unformatNumber(input);
         const result = eval(`${unformatNumber(memory)} ${operation} ${operand}`);
         setInput(formatNumber(result));
         setMemory(formatNumber(result));
-      } else {
-        // Store the first operand
+      } else if (!memory) {
         setMemory(input);
       }
 
-      setLastOperand(input);
-
-      // Set the new operation
+      // Convert visual operator to JavaScript operator
       if (value === '×') {
         setOperation('*');
       } else if (value === '÷') {
@@ -48,12 +42,10 @@ export const useOperationButton = ({
     },
     [
       input,
-      lastOperand,
       memory,
       operation,
       setInput,
       setActiveOperation,
-      setLastOperand,
       setMemory,
       setOperation,
       setShouldResetInput,
