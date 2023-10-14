@@ -9,3 +9,5 @@ To use this code, within the root of it, type:
 yarn && yarn dev
 ```
 This should open up a temporary web dev server located at: http://localhost:5173
+
+You can also check out the live version at: https://calc-61t3.onrender.com
